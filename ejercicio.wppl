@@ -1,0 +1,76 @@
+var concat_vars_rec = function(model, i, base, vars) {
+  if (i < 0) {
+    return base
+  } else {
+    return concat_vars_rec(model, i-1, base, vars) && model[vars[i]]
+  }
+}
+
+var concat_vars = function(model, vars) {
+  return concat_vars_rec(model, vars.length - 1, true, vars)
+}
+
+var prob = function(_variables, conds) {
+  var inf = Infer(
+    {method: 'enumerate'}, function() {
+      var m = model_f()
+      condition(concat_vars(m, conds))
+      if (typeof(_variables) == 'string') {
+        return m[_variables]
+      } else {
+        return concat_vars(m, _variables) 
+      } 
+    }
+  )
+  return Math.pow(Math.E, inf.score(true))
+}
+
+var model_f = function() {
+    var frio = flip(0.2)
+    var hosp = flip(0.01)
+    var fuma = flip(0.3)
+    
+    var cancer = ((fuma && flip(0.05)) || flip(0.01))
+    var tb = ((hosp && flip(0.01)) || flip(0.005))
+    var gripe = ((frio && flip(0.1)) || (hosp && flip(0.2)) || flip(0.2))
+    
+    var tos = ((gripe && flip(0.5)) || (tb && flip(0.7)) || (cancer && flip(0.3)))
+    var fiebre = ((gripe && flip(0.3)) || (tb && flip(0.2)))
+    var difResp = ((tb && flip(0.5)) || (cancer && flip(0.4)))
+    
+    return {
+      frio: frio,
+      hosp: hosp,
+      fuma: fuma,
+      cancer: cancer,
+      tb: tb,
+      gripe: gripe,
+      tos: tos,
+      fiebre: fiebre,
+      difResp: difResp
+    }
+}
+
+JSON.stringify({
+'tos_prior': prob('tos', []),
+'fiebre_prior': prob('fiebre', []),
+'difResp_prior': prob('difResp', []),
+'sintomas_prior': prob(['tos', 'fiebre', 'difResp'], []),
+
+'tos_dado_tb': prob('tos', ['tb']),
+'fiebre_dado_tb': prob('fiebre', ['tb']),
+'difResp_dado_tb': prob('difResp', ['tb']),
+'sintomas_dado_tb': prob(['tos', 'fiebre', 'difResp'], ['tb']),
+
+'tb_dado_sintomas': prob('tb', ['tos', 'fiebre', 'difResp']),
+
+'tos_dado_cancer': prob('tos', ['cancer']),
+'fiebre_dado_cancer': prob('fiebre', ['cancer']),
+'difResp_dado_cancer': prob('difResp', ['cancer']),
+'sintomas_dado_cancer': prob(['tos', 'fiebre', 'difResp'], ['cancer']),
+
+'cancer_dado_sintomas': prob('cancer', ['tos', 'fiebre', 'difResp']),
+
+'tb_prior': prob('tb', []),
+'cancer_prior': prob('cancer', [])
+})

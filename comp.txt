@@ -1,0 +1,27 @@
+Probabilidad de las enfermedades dados los síntomas
+                            py      wppl      Diff
+tb_dado_sintomas      0.540361  0.541296  0.000935
+cancer_dado_sintomas  0.479979  0.479073 -0.000906
+
+Probabilidad de los síntomas dado tb
+                        py      wppl          Diff
+sintomas_dado_tb  0.096724  0.097082  3.579919e-04
+fiebre_dado_tb    0.252216  0.252943  7.269223e-04
+tos_dado_tb       0.734628  0.735079  4.509394e-04
+difResp_dado_tb   0.504970  0.504970  2.442491e-15
+
+Probabilidad de los síntomas dado cancer
+                            py      wppl          Diff
+sintomas_dado_cancer  0.017631  0.017632  1.344693e-06
+fiebre_dado_cancer    0.066224  0.066223 -9.267350e-07
+tos_dado_cancer       0.378376  0.378372 -3.784168e-06
+difResp_dado_cancer   0.401530  0.401530 -1.554312e-15
+
+Probabilidad prior de síntomas y enfermedad
+                      py      wppl          Diff
+tb_prior        0.005099  0.005100  7.806256e-18
+cancer_prior    0.024850  0.024850 -1.085937e-15
+sintomas_prior  0.000913  0.000915  1.795642e-06
+fiebre_prior    0.066224  0.066223 -9.267350e-07
+tos_prior       0.118586  0.118580 -5.365653e-06
+difResp_prior   0.012464  0.012464 -3.903128e-16
